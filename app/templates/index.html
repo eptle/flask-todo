@@ -5,7 +5,11 @@
     <h1 class="cover-heading">Простой туду лист</h1>
     <p class="lead">Тут немножко не самого интересного текста, который нужен для того, чтобы вы его читали с очень задумчивым видом.</p>
     <p class="lead">
+      {% if current_user.is_anonymous %}
       <a href="{{ url_for('register') }}" class="btn btn-lg btn-secondary">Зарегистрироваться</a>
+      {% else %}
+      <a href="" class="btn btn-lg btn-secondary">К записям</a>
+      {% endif %}
     </p>
   </main>
 {% endblock %}
