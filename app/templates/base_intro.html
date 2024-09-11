@@ -22,7 +22,7 @@
               <a class="nav-link" href="{{ url_for('login') }}">Login</a>
               <a class="nav-link" href="{{ url_for('register') }}">Register</a>
               {% else %}
-              <a class="nav-link" href="">Boards</a>
+              <a class="nav-link" href="{{ url_for('boards', username=current_user.username) }}">Boards</a>
               <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
               {% endif %}
             </nav>

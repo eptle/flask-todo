@@ -1,4 +1,4 @@
-{% extends 'base_forms.html' %}
+{% extends 'base_intro.html' %}
 
 {% block content %}
 <main role="main" class="inner cover">
@@ -8,7 +8,7 @@
       {% if current_user.is_anonymous %}
       <a href="{{ url_for('register') }}" class="btn btn-lg btn-secondary">Зарегистрироваться</a>
       {% else %}
-      <a href="" class="btn btn-lg btn-secondary">К записям</a>
+      <a href="{{ url_for('boards', username=current_user.username) }}" class="btn btn-lg btn-secondary">К записям</a>
       {% endif %}
     </p>
   </main>

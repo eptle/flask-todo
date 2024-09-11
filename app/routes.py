@@ -53,4 +53,6 @@ def logout():
 @login_required
 @app.route('/<username>/boards')
 def boards(username):
+    if current_user.username != username:
+        return redirect(url_for('index'))
     return render_template('boards.html')
