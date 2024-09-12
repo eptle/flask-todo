@@ -53,6 +53,16 @@ def logout():
 @login_required
 @app.route('/<username>/boards')
 def boards(username):
+    is_board = True # переменная для тега <title>
     if current_user.username != username:
         return redirect(url_for('index'))
-    return render_template('boards.html')
+    return render_template('boards.html', is_board=is_board)
+
+
+@login_required
+@app.route('/<username>/boards/<board_name>', method=['POST', 'GET'])
+def tasks(username):
+    is_board = False # переменная для тега <title>
+    if current_user.username != username:
+        return redirect(url_for('index'))
+    return render_template('boards.html', is_board=is_board)

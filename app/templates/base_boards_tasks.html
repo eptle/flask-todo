@@ -3,9 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    {% if is_board %}
+    <title>Your boards</title>
+    {% else %}
+    <title>Your tasks</title>
+    {% endif %}
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/css/index.css">
 </head>
 <body>
-    {% block content %}{% endblock %}
+    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+        <header class="masthead mb-auto">
+          <div class="inner">
+            <h3 class="masthead-brand">Eptel</h3>
+            <nav class="nav nav-masthead justify-content-center">
+              <a class="nav-link active" href="{{ url_for('index') }}">Home</a>
+              {% if current_user.is_anonymous %}
+              <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+              <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+              {% else %}
+              <a class="nav-link" href="{{ url_for('boards', username=current_user.username) }}">Boards</a>
+              <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+              {% endif %}
+            </nav>
+          </div>
+        </header>
+
+        {% block content %}{% endblock %}
+  
+        <footer class="mastfoot mt-auto">
+        </footer>
+    </div>
+
+    <script src="../static/js/bootstrap.bundle.js"></script>
 </body>
 </html>
