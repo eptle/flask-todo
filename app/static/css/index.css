@@ -110,13 +110,13 @@ body {
 }
 
 .board-btn {
-  padding-left: 30px; /* Отступ для текста, чтобы он не перекрывал изображение */
-  height: 30px; /* Высота кнопки, под размер изображения */
-  border: none; /* Убираем стандартную рамку */
-  background-color: transparent; /* Убираем фон */
-  cursor: pointer; /* Изменяем курсор */
-  font-size: 16px; /* Размер текста */
-  line-height: 30px; /* Выравнивание текста по высоте */
+  padding-left: 30px;
+  height: 30px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 30px;
 }
 
 .open-board {

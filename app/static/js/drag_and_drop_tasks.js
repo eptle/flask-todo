@@ -8,7 +8,6 @@ new Sortable(taskList, {
             positions.push({ id: item.dataset.taskId, position: index });
         });
 
-        // Отправка новых позиций на сервер через AJAX
         fetch('/update-task-positions', {
             method: 'POST',
             headers: {

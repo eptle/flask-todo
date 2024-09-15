@@ -52,8 +52,8 @@ def logout():
     return redirect(url_for('index'))
 
 
-@login_required
 @app.route('/<username>/boards', methods=['POST', 'GET'])
+@login_required
 def boards(username):
     if current_user.is_anonymous or current_user.username != username:
         return redirect(url_for('index'))
@@ -85,8 +85,8 @@ def boards(username):
         )
 
 
+@app.route('/delete-board', methods=['POST', 'GET'])
 @login_required
-@app.route('/delete_board', methods=['POST', 'GET'])
 def delete_board():
     board_id = request.form.get('board_id')
     board = db.session.scalar(sa.select(Boards).where(Boards.id == board_id))
@@ -100,14 +100,26 @@ def delete_board():
     return redirect(url_for('boards', username=current_user.username))
 
 
-@login_required
 @app.route('/<username>/boards/<board_id>/<board_title>', methods=['POST', 'GET'])
+@login_required
 def tasks(username, board_id, board_title):
+    if current_user.is_anonymous or current_user.username != username:
+        return redirect(url_for('index'))
+
+    form = AddTaskForm()
+    if form.validate_on_submit():
+        return redirect(url_for(
+            'tasks', username=current_user.username, 
+            board_id=board_id, 
+            board_title=board_title
+            ))
+
     return render_template(
         'todolist.html', 
         username=username, 
         board_id=board_id, 
         board_title=board_title,
+        form=form,
         title=board_title
         )
 

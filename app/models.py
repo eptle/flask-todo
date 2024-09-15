@@ -63,12 +63,19 @@ class Tasks(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     board_id: Mapped[int] = mapped_column(sa.ForeignKey('boards.id'), index=True)
     title: Mapped[str] = mapped_column(sa.String(50))
-    description: Mapped[str] = mapped_column(sa.String())
     position: Mapped[int] = mapped_column()
     last_edit: Mapped[datetime] = mapped_column(sa.Date, default=lambda: datetime.now(timezone.utc))
 
     board: Mapped["Boards"] = relationship("Boards", back_populates="tasks")
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'board_id': self.title,
+            'title': self.title,
+            'position': self.position
+        }
+    
 
 @login.user_loader
 def load_user(id):
