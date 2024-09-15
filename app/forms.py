@@ -5,6 +5,7 @@ from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationE
 from app import db
 import sqlalchemy as sa
 from app.models import User
+from markupsafe import Markup
 
 
 class RegistationForm(FlaskForm):
@@ -32,3 +33,28 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password: ', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Login')
+
+
+class AddBoardForm(FlaskForm):
+    title = StringField('Board name: ', validators=[DataRequired()])
+    submit = SubmitField('Create')
+
+    # def validate_board_name(self, name):
+    #     board = db.session.scalar()
+
+
+class AddTaskForm(FlaskForm):
+    title = StringField('Enter your task: ', validators=[DataRequired()])
+    submit = SubmitField('Add task')
+
+
+class OpenBoardForm(FlaskForm):
+    submit = SubmitField('Open', render_kw={'class': 'board-btn open-board'})
+
+
+class EditBoardForm(FlaskForm):
+    submit = SubmitField('Edit', render_kw={'class': 'board-btn edit-board'})
+
+
+class DeleteBoardForm(FlaskForm):
+    submit = SubmitField('Delete', render_kw={'class': 'board-btn delete-board'})

@@ -110,23 +110,9 @@ body {
 }
 
 .board-btn {
-  padding-left: 30px; /* Отступ для текста, чтобы он не перекрывал изображение */
-  height: 30px; /* Высота кнопки, под размер изображения */
-  border: none; /* Убираем стандартную рамку */
-  background-color: transparent; /* Убираем фон */
-  cursor: pointer; /* Изменяем курсор */
-  font-size: 16px; /* Размер текста */
-  line-height: 30px; /* Выравнивание текста по высоте */
+  color: black;
 }
 
-.open-board {
-  background: url('../src/view_icon.svg') no-repeat left center;
-}
-
-.delete-board {
-  background: url('../src/delete_icon.svg') no-repeat left center;
-}
-
-.edit-board {
-  background: url('../src/edit_icon.svg') no-repeat left center;
+.board-icon {
+  width: 18px;
 }

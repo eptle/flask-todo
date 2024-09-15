@@ -1,7 +1,9 @@
-from flask import redirect, render_template, flash, url_for
+from flask import redirect, render_template, flash, url_for, request
 from app import app, db, login
-from app.forms import RegistationForm, LoginForm
-from flask_login import current_user, login_user, logout_user, login_required
+from app.forms import RegistationForm, LoginForm, AddBoardForm, \
+    AddTaskForm, DeleteBoardForm, EditBoardForm, OpenBoardForm
+from flask_login import current_user, login_user, logout_user, \
+    login_required
 import sqlalchemy as sa
 from app.models import User, Boards, Tasks
 
@@ -51,18 +53,73 @@ def logout():
 
 
 @login_required
-@app.route('/<username>/boards')
+@app.route('/<username>/boards', methods=['POST', 'GET'])
 def boards(username):
-    is_board = True # переменная для тега <title>
-    if current_user.username != username:
+    if current_user.is_anonymous or current_user.username != username:
         return redirect(url_for('index'))
-    return render_template('boards.html', is_board=is_board)
+
+    open_board_form = OpenBoardForm()
+    delete_board_form = DeleteBoardForm()
+    edit_board_form = EditBoardForm()
+
+    add_board_form = AddBoardForm()
+    if add_board_form.validate_on_submit():
+        new_board = Boards(title=add_board_form.title.data, user_id=current_user.id, position=Boards.get_position(current_user))
+        db.session.add(new_board)
+        db.session.commit()
+        return redirect(url_for('boards', username=current_user.username))
+
+    query = sa.select(Boards).where(Boards.user_id == current_user.id)
+    user_boards = db.session.scalars(query).all()
+    board_dicts = [b.to_dict() for b in user_boards]
+    is_board = True # переменная для тега <title>
+    return render_template(
+        'boards.html', 
+        is_board=is_board, 
+        form=add_board_form, 
+        boards=board_dicts,
+        open_board_form=open_board_form,
+        delete_board_form=delete_board_form,
+        edit_board_form=edit_board_form
+        )
 
 
 @login_required
-@app.route('/<username>/boards/<board_name>', method=['POST', 'GET'])
-def tasks(username):
-    is_board = False # переменная для тега <title>
-    if current_user.username != username:
-        return redirect(url_for('index'))
-    return render_template('boards.html', is_board=is_board)
+@app.route('/delete_board', methods=['POST', 'GET'])
+def delete_board():
+    board_id = request.form.get('board_id')
+    board = db.session.scalar(sa.select(Boards).where(Boards.id == board_id))
+
+    if board:
+        db.session.delete(board)
+        db.session.commit()
+    else:
+        flash("I can't delete this, sorry :(", 'danger')
+
+    return redirect(url_for('boards', username=current_user.username))
+
+
+@login_required
+@app.route('/<username>/boards/<board_id>/<board_title>', methods=['POST', 'GET'])
+def tasks(username, board_id, board_title):
+    return render_template(
+        'todolist.html', 
+        username=username, 
+        board_id=board_id, 
+        board_title=board_title
+        )
+
+
+@app.errorhandler(404)
+def error_404(e):
+    return render_template('errors/404.html'), 404
+
+
+@app.errorhandler(403)
+def error_403(e):
+    return render_template('errors/403.html'), 403
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return 'CHINCHIN', 204

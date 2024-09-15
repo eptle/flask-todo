@@ -1,4 +1,4 @@
-{% extends 'base_boards_tasks.html' %}
+{% extends 'base_intro.html' %}
 
 {% block content %}
 <div class="container mt-4">
@@ -6,29 +6,48 @@
         <div class="col-md-4">
             <div class="card text-center bg-light">
                 <div class="card-body">
-                    <a href="#" class="btn btn-primary w-100 h-100">+ Add List</a>
+                    <form method="post" action="">
+                        {{ form.hidden_tag() }}
+                        <div class="form-group">
+                            {{ form.title.label }}
+                            {{ form.title(class="form-control", size=40) }}
+                            {% for error in form.title.errors %}
+                            <span class="text-danger">[{{ error }}]</span>
+                            {% endfor %}
+                            <div class="form-group">
+                                {{ form.submit(class="btn btn-primary") }}
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
+        {% for board in boards %}
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">To-Do List 1</h5>
-                    <p class="card-text">Some description of the list.</p>
-                    <a href="#" class="btn btn-primary">View List</a>
-                </div>
-            </div>
-        </div>
+                    <h5 class="card-title">{{ board['title'] }}</h5>
+                    <form method="post" action="{{ url_for('tasks', username=current_user.username, board_id=board['id'], board_title=board['title']) }}">
+                        {{ open_board_form.hidden_tag() }}
+                        {{ open_board_form.submit() }}
+                    </form>
 
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">To-Do List 2</h5>
-                    <p class="card-text">Some description of the list.</p>
-                    <a href="#" class="btn btn-primary">View List</a>
+                    <form method="post" action="">
+                        {{ edit_board_form.hidden_tag() }}
+                        <input type="hidden" name="board_id" value="{{ board['id'] }}">
+                        {{ edit_board_form.submit() }}
+                    </form>
+
+                    <form method="post" action="{{ url_for('delete_board') }}">
+                        {{ delete_board_form.hidden_tag() }}
+                        <input type="hidden" name="board_id" value="{{ board['id'] }}">
+                        {{ delete_board_form.submit() }}
+                    </form>
+
                 </div>
             </div>
         </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

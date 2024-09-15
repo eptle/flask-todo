@@ -8,8 +8,8 @@
     {% else %}
     <title>Eptel – ToDo</title>
     {% endif %}
-    <link rel="stylesheet" href="../static/css/bootstrap.css">
-    <link rel="stylesheet" href="../static/css/index.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 </head>
 <body>
     <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
@@ -34,6 +34,6 @@
         <footer class="mastfoot mt-auto">
         </footer>
     </div>
-    <script src="../static/js/bootstrap.bundle.js"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}"></script>
 </body>
 </html>

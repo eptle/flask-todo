@@ -31,14 +31,31 @@ class User(db.Model, UserMixin):
 class Boards(db.Model):
     __tablename__ = 'boards'
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
     user_id: Mapped[int] = mapped_column(sa.ForeignKey('user.id'), index=True)
-    name: Mapped[str] = mapped_column(sa.String(50))
+    title: Mapped[str] = mapped_column(sa.String(50))
     date_created: Mapped[datetime] = mapped_column(sa.Date, default=lambda: datetime.now(timezone.utc))
+    position: Mapped[int] = mapped_column()
 
     user: Mapped['User'] = relationship('User', back_populates='boards')
     tasks: Mapped[list['Tasks']] = relationship('Tasks', back_populates='board')
 
+    __table_args__ = (sa.UniqueConstraint('user_id', 'position', name='user_position_uc'),)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'position': self.position,
+            'user_id': self.user_id
+        }
+    
+    @staticmethod
+    def get_position(current_user):
+        max_position = db.session.query(sa.func.max(Boards.position)).filter_by(user_id = current_user.id).scalar()
+        new_position = 1 if max_position is None else max_position + 1
+        return new_position
+    
 
 class Tasks(db.Model):
     __tablename__ = 'tasks'
@@ -47,7 +64,7 @@ class Tasks(db.Model):
     board_id: Mapped[int] = mapped_column(sa.ForeignKey('boards.id'), index=True)
     title: Mapped[str] = mapped_column(sa.String(50))
     description: Mapped[str] = mapped_column(sa.String())
-    position: Mapped[str] = mapped_column(unique=True)
+    position: Mapped[int] = mapped_column()
     last_edit: Mapped[datetime] = mapped_column(sa.Date, default=lambda: datetime.now(timezone.utc))
 
     board: Mapped["Boards"] = relationship("Boards", back_populates="tasks")
