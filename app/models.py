@@ -38,7 +38,10 @@ class Boards(db.Model):
     position: Mapped[int] = mapped_column()
 
     user: Mapped['User'] = relationship('User', back_populates='boards')
-    tasks: Mapped[list['Tasks']] = relationship('Tasks', back_populates='board')
+    tasks: Mapped[list['Tasks']] = relationship('Tasks', 
+                                                back_populates='board',
+                                                cascade="all, delete-orphan"
+                                                )
 
     __table_args__ = (sa.UniqueConstraint('user_id', 'position', name='user_position_uc'),)
 
@@ -60,7 +63,7 @@ class Boards(db.Model):
 class Tasks(db.Model):
     __tablename__ = 'tasks'
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
     board_id: Mapped[int] = mapped_column(sa.ForeignKey('boards.id'), index=True)
     title: Mapped[str] = mapped_column(sa.String(50))
     position: Mapped[int] = mapped_column()
@@ -68,13 +71,21 @@ class Tasks(db.Model):
 
     board: Mapped["Boards"] = relationship("Boards", back_populates="tasks")
 
+    __table_args__ = (sa.UniqueConstraint('board_id', 'position', name='user_position_uc'),)
+
     def to_dict(self):
         return {
             'id': self.id,
-            'board_id': self.title,
+            'board_id': self.board_id,
             'title': self.title,
             'position': self.position
         }
+    
+    @staticmethod
+    def get_position(board_id):
+        max_position = db.session.query(sa.func.max(Tasks.position)).filter_by(board_id = board_id).scalar()
+        new_position = 1 if max_position is None else max_position + 1
+        return new_position
     
 
 @login.user_loader

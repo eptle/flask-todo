@@ -1,7 +1,9 @@
-from flask import redirect, render_template, flash, url_for, request
+from flask import redirect, render_template, flash, url_for, \
+    request, jsonify
 from app import app, db, login
-from app.forms import RegistationForm, LoginForm, AddBoardForm, \
-    AddTaskForm, DeleteForm, EditForm, OpenForm
+from app.forms import RegistationForm, LoginForm, \
+    AddBoardForm, DeleteBoardForm, EditBoardForm, OpenBoardForm, \
+    AddTaskForm, DeleteTaskForm, EditTaskForm
 from flask_login import current_user, login_user, logout_user, \
     login_required
 import sqlalchemy as sa
@@ -58,13 +60,14 @@ def boards(username):
     if current_user.is_anonymous or current_user.username != username:
         return redirect(url_for('index'))
 
-    open_board_form = OpenForm()
-    delete_board_form = DeleteForm()
-    edit_board_form = EditForm()
+    open_board_form = OpenBoardForm()
+    delete_board_form = DeleteBoardForm()
+    edit_board_form = EditBoardForm()
 
     add_board_form = AddBoardForm()
     if add_board_form.validate_on_submit():
-        new_board = Boards(title=add_board_form.title.data, user_id=current_user.id, position=Boards.get_position(current_user))
+        new_board = Boards(title=add_board_form.title.data,
+                           user_id=current_user.id, position=Boards.get_position(current_user))
         db.session.add(new_board)
         db.session.commit()
         return redirect(url_for('boards', username=current_user.username))
@@ -72,30 +75,26 @@ def boards(username):
     query = sa.select(Boards).where(Boards.user_id == current_user.id)
     user_boards = db.session.scalars(query).all()
     board_dicts = [b.to_dict() for b in user_boards]
-    is_board = True # переменная для тега <title>
+    is_board = True  # переменная для тега <title>
     return render_template(
-        'boards.html', 
-        is_board=is_board, 
-        form=add_board_form, 
+        'boards.html',
+        is_board=is_board,
+        form=add_board_form,
         boards=board_dicts,
         open_board_form=open_board_form,
         delete_board_form=delete_board_form,
         edit_board_form=edit_board_form,
         title='Boards'
-        )
+    )
 
 
-@app.route('/delete-board', methods=['POST', 'GET'])
+@app.route('/delete-board/<board_id>', methods=['POST', 'GET'])
 @login_required
-def delete_board():
-    board_id = request.form.get('board_id')
+def delete_board(board_id):
     board = db.session.scalar(sa.select(Boards).where(Boards.id == board_id))
 
-    if board:
-        db.session.delete(board)
-        db.session.commit()
-    else:
-        flash("I can't delete this, sorry :(", 'danger')
+    db.session.delete(board)
+    db.session.commit()
 
     return redirect(url_for('boards', username=current_user.username))
 
@@ -106,22 +105,53 @@ def tasks(username, board_id, board_title):
     if current_user.is_anonymous or current_user.username != username:
         return redirect(url_for('index'))
 
-    form = AddTaskForm()
-    if form.validate_on_submit():
+    add_task_form = AddTaskForm()
+    delete_task_form = DeleteTaskForm()
+    if add_task_form.validate_on_submit():
+        new_task = Tasks(board_id=board_id, title=add_task_form.title.data,
+                         position=Tasks.get_position(board_id))
+        try:
+            db.session.add(new_task)
+            db.session.commit()
+        except:
+            db.session.rollback()
+
         return redirect(url_for(
-            'tasks', username=current_user.username, 
-            board_id=board_id, 
+            'tasks',
+            username=current_user.username,
+            board_id=board_id,
             board_title=board_title
-            ))
+        ))
+
+    query = sa.select(Tasks).where(Tasks.board_id == board_id)
+    tasks = db.session.scalars(query).all()
+    tasks_dicts = [t.to_dict() for t in tasks]
+    print(tasks_dicts)
 
     return render_template(
-        'todolist.html', 
-        username=username, 
-        board_id=board_id, 
+        'todolist.html',
+        username=username,
+        board_id=board_id,
         board_title=board_title,
-        form=form,
+        add_task_form=add_task_form,
+        delete_task_form=delete_task_form,
+        tasks=tasks_dicts,
         title=board_title
-        )
+    )
+
+
+@app.route('/delete-task/<task_id>', methods=['POST', 'GET'])
+@login_required
+def delete_task(task_id):
+    task = db.session.scalar(sa.select(Tasks).where(Tasks.id == task_id))
+    query = db.session.query(Tasks).filter_by(id=task_id).first()
+    board_id = query.board_id
+    board_title = query.board.title
+
+    db.session.delete(task)
+    db.session.commit()
+
+    return redirect(url_for('tasks', username=current_user.username, board_id=board_id, board_title=board_title))
 
 
 @app.errorhandler(404)

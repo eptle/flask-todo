@@ -34,13 +34,11 @@
 
                     <form method="post" action="">
                         {{ edit_board_form.hidden_tag() }}
-                        <input type="hidden" name="board_id" value="{{ board['id'] }}">
                         {{ edit_board_form.submit() }}
                     </form>
 
-                    <form method="post" action="{{ url_for('delete_board') }}">
+                    <form method="post" action="{{ url_for('delete_board', board_id=board['id']) }}">
                         {{ delete_board_form.hidden_tag() }}
-                        <input type="hidden" name="board_id" value="{{ board['id'] }}">
                         {{ delete_board_form.submit() }}
                     </form>
 

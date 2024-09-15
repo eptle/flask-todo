@@ -1,8 +1,8 @@
-"""users table
+"""create db again
 
-Revision ID: 6e33fb2da3d7
+Revision ID: a2b6fd4521aa
 Revises: 
-Create Date: 2024-09-13 10:47:24.445098
+Create Date: 2024-09-15 17:15:31.514804
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '6e33fb2da3d7'
+revision = 'a2b6fd4521aa'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -33,26 +33,26 @@ def upgrade():
     op.create_table('boards',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=50), nullable=False),
+    sa.Column('title', sa.String(length=50), nullable=False),
     sa.Column('date_created', sa.Date(), nullable=False),
     sa.Column('position', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name')
+    sa.UniqueConstraint('user_id', 'position', name='user_position_uc')
     )
     with op.batch_alter_table('boards', schema=None) as batch_op:
+        batch_op.create_index(batch_op.f('ix_boards_id'), ['id'], unique=False)
         batch_op.create_index(batch_op.f('ix_boards_user_id'), ['user_id'], unique=False)
 
     op.create_table('tasks',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('board_id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=50), nullable=False),
-    sa.Column('description', sa.String(), nullable=False),
     sa.Column('position', sa.Integer(), nullable=False),
     sa.Column('last_edit', sa.Date(), nullable=False),
     sa.ForeignKeyConstraint(['board_id'], ['boards.id'], ),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('position')
+    sa.UniqueConstraint('board_id', 'position', name='user_position_uc')
     )
     with op.batch_alter_table('tasks', schema=None) as batch_op:
         batch_op.create_index(batch_op.f('ix_tasks_board_id'), ['board_id'], unique=False)
@@ -68,6 +68,7 @@ def downgrade():
     op.drop_table('tasks')
     with op.batch_alter_table('boards', schema=None) as batch_op:
         batch_op.drop_index(batch_op.f('ix_boards_user_id'))
+        batch_op.drop_index(batch_op.f('ix_boards_id'))
 
     op.drop_table('boards')
     with op.batch_alter_table('user', schema=None) as batch_op:

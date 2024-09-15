@@ -8,6 +8,7 @@ from app.models import User
 from markupsafe import Markup
 
 
+# authentication forms
 class RegistationForm(FlaskForm):
     username = StringField('Username: ', validators=[DataRequired(), Length(min=3, max=50)])
     email = EmailField('Email: ', validators=[DataRequired()])
@@ -35,6 +36,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 
+# board forms
 class AddBoardForm(FlaskForm):
     title = StringField('Board name: ', validators=[DataRequired()])
     submit = SubmitField('Create')
@@ -43,18 +45,27 @@ class AddBoardForm(FlaskForm):
     #     board = db.session.scalar()
 
 
+class OpenBoardForm(FlaskForm):
+    submit = SubmitField('Open', render_kw={'class': 'board-btn open-board'})
+
+
+class EditBoardForm(FlaskForm):
+    submit = SubmitField('Edit', render_kw={'class': 'board-btn edit-board'})
+
+
+class DeleteBoardForm(FlaskForm):
+    submit = SubmitField('Delete', render_kw={'class': 'board-btn delete-board'})
+
+
+# task forms
 class AddTaskForm(FlaskForm):
     title = StringField('Enter your task: ', validators=[DataRequired()])
     submit = SubmitField('Add task', render_kw={'class': 'board-btn add-task'})
 
 
-class OpenForm(FlaskForm):
-    submit = SubmitField('Open', render_kw={'class': 'board-btn open-board'})
-
-
-class EditForm(FlaskForm):
+class EditTaskForm(FlaskForm):
     submit = SubmitField('Edit', render_kw={'class': 'board-btn edit-board'})
 
 
-class DeleteForm(FlaskForm):
+class DeleteTaskForm(FlaskForm):
     submit = SubmitField('Delete', render_kw={'class': 'board-btn delete-board'})

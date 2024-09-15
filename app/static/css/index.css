@@ -130,3 +130,7 @@ body {
 .edit-board {
   background: url('../src/edit_icon.svg') no-repeat left center;
 }
+
+.add-task {
+  background: url('../src/add_black.svg') no-repeat left center;
+}
