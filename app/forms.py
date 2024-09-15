@@ -45,16 +45,16 @@ class AddBoardForm(FlaskForm):
 
 class AddTaskForm(FlaskForm):
     title = StringField('Enter your task: ', validators=[DataRequired()])
-    submit = SubmitField('Add task')
+    submit = SubmitField('Add task', render_kw={'class': 'board-btn add-task'})
 
 
-class OpenBoardForm(FlaskForm):
+class OpenForm(FlaskForm):
     submit = SubmitField('Open', render_kw={'class': 'board-btn open-board'})
 
 
-class EditBoardForm(FlaskForm):
+class EditForm(FlaskForm):
     submit = SubmitField('Edit', render_kw={'class': 'board-btn edit-board'})
 
 
-class DeleteBoardForm(FlaskForm):
+class DeleteForm(FlaskForm):
     submit = SubmitField('Delete', render_kw={'class': 'board-btn delete-board'})

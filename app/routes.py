@@ -1,7 +1,7 @@
 from flask import redirect, render_template, flash, url_for, request
 from app import app, db, login
 from app.forms import RegistationForm, LoginForm, AddBoardForm, \
-    AddTaskForm, DeleteBoardForm, EditBoardForm, OpenBoardForm
+    AddTaskForm, DeleteForm, EditForm, OpenForm
 from flask_login import current_user, login_user, logout_user, \
     login_required
 import sqlalchemy as sa
@@ -58,9 +58,9 @@ def boards(username):
     if current_user.is_anonymous or current_user.username != username:
         return redirect(url_for('index'))
 
-    open_board_form = OpenBoardForm()
-    delete_board_form = DeleteBoardForm()
-    edit_board_form = EditBoardForm()
+    open_board_form = OpenForm()
+    delete_board_form = DeleteForm()
+    edit_board_form = EditForm()
 
     add_board_form = AddBoardForm()
     if add_board_form.validate_on_submit():
@@ -80,7 +80,8 @@ def boards(username):
         boards=board_dicts,
         open_board_form=open_board_form,
         delete_board_form=delete_board_form,
-        edit_board_form=edit_board_form
+        edit_board_form=edit_board_form,
+        title='Boards'
         )
 
 
@@ -106,7 +107,8 @@ def tasks(username, board_id, board_title):
         'todolist.html', 
         username=username, 
         board_id=board_id, 
-        board_title=board_title
+        board_title=board_title,
+        title=board_title
         )
 
 
