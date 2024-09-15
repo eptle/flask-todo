@@ -1,7 +1,6 @@
 {% extends 'base_intro.html' %}
 
 {% block content %}
-<script src="{{ url_for('static', filename='js/Sortable.min.js') }}"></script>
 <h1>{{ username }}</h1>
 <h2>{{ board_id }} - {{ board_title }}</h2>
 <div class="container mt-5">
@@ -25,5 +24,6 @@
         </li>
     </ul>
 </div>
-<script scr="{{ url_for('static', filename='js/todolist.js') }}"></script>
+<script src="{{ url_for('static', filename='js/Sortable.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/drag_and_drop_tasks.js') }}"></script>
 {% endblock %}
