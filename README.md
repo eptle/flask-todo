@@ -1,2 +1,2 @@
 # flask-todo
-a simple todo list made on flask with authentication 
+a simple todo list made on flask with authentication
