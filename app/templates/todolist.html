@@ -19,8 +19,8 @@
     </form>
     <ul id="task-list" class="list-group">
         {% for task in tasks %}
-            <li class="list-group-item d-flex justify-content-between align-items-center" data-task-id="1" data-position="0">
-                {{ task['title'] }}
+            <li class="list-group-item d-flex justify-content-between align-items-center" data-task-id="{{ task['id'] }}">
+                <p class="srt-task">{{ task['title'] }}</p>
                     <form class="badge bg-primary rounded-pill" method="post", action="{{ url_for('delete_task', task_id=task['id']) }}">
                         {{ delete_task_form.hidden_tag() }}
                         {{ delete_task_form.submit() }}

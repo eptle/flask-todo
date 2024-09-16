@@ -126,7 +126,7 @@ def tasks(username, board_id, board_title):
     query = sa.select(Tasks).where(Tasks.board_id == board_id)
     tasks = db.session.scalars(query).all()
     tasks_dicts = [t.to_dict() for t in tasks]
-    print(tasks_dicts)
+    tasks_dicts.sort(key=lambda x: x['position'])
 
     return render_template(
         'todolist.html',
@@ -152,6 +152,25 @@ def delete_task(task_id):
     db.session.commit()
 
     return redirect(url_for('tasks', username=current_user.username, board_id=board_id, board_title=board_title))
+
+
+@app.route('/update-task-order', methods=['POST'])
+@login_required
+def update_task_order():
+    task_order = request.json
+
+    try:
+        for task_data in task_order:
+            task = db.session.query(Tasks).get(task_data['id'])
+            if task:
+                task.position = task_data['position']
+        db.session.commit()
+        return jsonify({'status': 'success'})
+    
+    except Exception as e:
+        db.session.rollback()
+        print(f'Error {e}')
+        return jsonify({'status': 'error'}), 500
 
 
 @app.errorhandler(404)

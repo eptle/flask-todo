@@ -71,7 +71,7 @@ class Tasks(db.Model):
 
     board: Mapped["Boards"] = relationship("Boards", back_populates="tasks")
 
-    __table_args__ = (sa.UniqueConstraint('board_id', 'position', name='user_position_uc'),)
+    # __table_args__ = (sa.UniqueConstraint('board_id', 'position', name='user_position_uc'),)
 
     def to_dict(self):
         return {
