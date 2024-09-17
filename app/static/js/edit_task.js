@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $(document).on('click', 'p.sort-task', function() {
+    $(document).on('dblclick', 'p.sort-task', function() {
         let $p = $(this);
         let currentText = $p.text();
         let $input = $('<input>', {
@@ -44,7 +44,6 @@ $(document).ready(function() {
             }
         });
 
-        // Обработка потери фокуса (blur)
         $input.on('blur', function() {
             updateTask(); 
         });
