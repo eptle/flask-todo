@@ -1,14 +1,13 @@
 {% extends 'base_intro.html' %}
 
 {% block content %}
-<h1>{{ username }}</h1>
-<h2>{{ board_id }} - {{ board_title }}</h2>
-<div class="container mt-5">
+<div class="container-fluid mt-5">
+    <h1>{{ username }} — {{ board_title }}</h1>
     <form method="post" action="">
         {{ add_task_form.hidden_tag() }}
         <div class="form-group">
             {{ add_task_form.title.label }}
-            {{ add_task_form.title(class="form-control", size=40) }}
+            {{ add_task_form.title(class="form-control w-45") }}
             {% for error in add_task_form.title.errors %}
             <span class="text-danger">[{{ error }}]</span>
             {% endfor %}
@@ -17,7 +16,7 @@
             </div>
         </div>
     </form>
-    <ul id="task-list" class="list-group">
+    <ul id="task-list" class="list-group col">
         {% for task in tasks %}
             <li class="list-group-item d-flex justify-content-between align-items-center" data-task-id="{{ task['id'] }}">
                 <p class="sort-task">{{ task['title'] }}</p>

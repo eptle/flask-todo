@@ -1,16 +1,16 @@
 {% extends 'base_intro.html' %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container mt-4 form-container">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-4 board">
             <div class="card text-center bg-light">
                 <div class="card-body">
                     <form method="post" action="">
                         {{ form.hidden_tag() }}
                         <div class="form-group">
                             {{ form.title.label }}
-                            {{ form.title(class="form-control", size=40) }}
+                            {{ form.title(class="form-control") }}
                             {% for error in form.title.errors %}
                             <span class="text-danger">[{{ error }}]</span>
                             {% endfor %}
@@ -23,7 +23,7 @@
             </div>
         </div>
         {% for board in boards %}
-        <div class="col-md-4">
+        <div class="col-md-4 board">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title" data-board-id="{{ board['id'] }}"> {{ board['title'] }} </h5>
