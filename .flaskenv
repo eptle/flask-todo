@@ -1,1 +1,2 @@
 FLASK_APP=todo.py
+FLASK_DEBUG=1
