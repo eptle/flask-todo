@@ -173,6 +173,24 @@ def update_task_order():
         return jsonify({'status': 'error'}), 500
 
 
+@app.route('/edit-task', methods=['GET', 'POST'])
+@login_required
+def edit_task():
+    new_task_name = request.json
+    
+    try:
+        task = db.session.query(Tasks).get(new_task_name['task_id'])
+        if task:
+            task.title = new_task_name['new_title']
+        db.session.commit()
+        return jsonify({'status': 'success'})
+
+    except Exception as e:
+        db.session.rollback()
+        print(f'Error {e}')
+        return jsonify({'status': 'error'}), 500
+
+
 @app.errorhandler(404)
 def error_404(e):
     return render_template('errors/404.html'), 404

@@ -20,8 +20,8 @@
     <ul id="task-list" class="list-group">
         {% for task in tasks %}
             <li class="list-group-item d-flex justify-content-between align-items-center" data-task-id="{{ task['id'] }}">
-                <p class="srt-task">{{ task['title'] }}</p>
-                    <form class="badge bg-primary rounded-pill" method="post", action="{{ url_for('delete_task', task_id=task['id']) }}">
+                <p class="sort-task">{{ task['title'] }}</p>
+                    <form class="" method="post", action="{{ url_for('delete_task', task_id=task['id']) }}">
                         {{ delete_task_form.hidden_tag() }}
                         {{ delete_task_form.submit() }}
                     </form>
@@ -29,6 +29,8 @@
         {% endfor %}
     </ul>
 </div>
+<script src="{{ url_for('static', filename='js/jquery-3.7.1.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/Sortable.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/drag_and_drop_tasks.js') }}"></script>
+<script src="{{ url_for('static', filename='js/edit_task.js') }}"></script>
 {% endblock %}

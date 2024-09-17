@@ -134,3 +134,7 @@ body {
 .add-task {
   background: url('../src/add_black.svg') no-repeat left center;
 }
+
+.task-done {
+  background: url('../src/done_black.svg') no-repeat center;
+}

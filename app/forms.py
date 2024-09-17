@@ -68,4 +68,4 @@ class EditTaskForm(FlaskForm):
 
 
 class DeleteTaskForm(FlaskForm):
-    submit = SubmitField('Delete', render_kw={'class': 'board-btn delete-board'})
+    submit = SubmitField('', render_kw={'class': 'board-btn task-done'})

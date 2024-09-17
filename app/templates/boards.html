@@ -26,7 +26,7 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">{{ board['title'] }}</h5>
+                    <h5 class="card-title" data-board-id="{{ board['id'] }}"> {{ board['title'] }} </h5>
                     <form method="post" action="{{ url_for('tasks', username=current_user.username, board_id=board['id'], board_title=board['title']) }}">
                         {{ open_board_form.hidden_tag() }}
                         {{ open_board_form.submit() }}
