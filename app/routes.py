@@ -26,6 +26,9 @@ def login():
             sa.select(User).where(User.username == form.username.data))
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
+            print()
+            print('INVALID')
+            print()
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         return redirect(url_for('index'))
@@ -38,13 +41,15 @@ def register():
         return redirect(url_for('index'))
     form = RegistationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data,
-                    email=form.email.data)
-        user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Congratulations, you are now a registered user!')
-        return redirect(url_for('login'))
+        try:
+            user = User(username=form.username.data,
+                        email=form.email.data)
+            user.set_password(form.password.data)
+            db.session.add(user)
+            db.session.commit()
+            return redirect(url_for('login'))
+        except:
+            db.session.rollback()
     return render_template('register.html', title='register', form=form)
 
 
