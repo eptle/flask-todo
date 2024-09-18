@@ -9,9 +9,6 @@
             <div class="form-group d-flex ">
                 {{ add_task_form.title.label }}
                 {{ add_task_form.title(class="form-control w-45", placeholder="Enter your task here") }}
-                {% for error in add_task_form.title.errors %}
-                <span class="text-danger">[{{ error }}]</span>
-                {% endfor %}
                 <div class="form-group">
                     {{ add_task_form.submit(class="btn btn-primary") }}
                 </div>
