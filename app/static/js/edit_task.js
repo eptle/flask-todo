@@ -1,19 +1,19 @@
 $(document).ready(function() {
-    $(document).on('dblclick', 'p.sort-task', function() {
-        let $p = $(this);
-        let currentText = $p.text();
+    $(document).on('dblclick', 'div.sort-task', function() {
+        let $div = $(this);
+        let currentText = $div.text();
         let $input = $('<input>', {
             type: 'text',
             class: 'form-control',
             value: currentText,
         });
 
-        $p.replaceWith($input);
+        $div.replaceWith($input);
         $input.focus(); 
 
         function updateTask() {
             let newText = $input.val(); 
-            let $newP = $('<p>', {
+            let $newP = $('<div>', {
                 class: 'sort-task',
                 text: newText  
             });

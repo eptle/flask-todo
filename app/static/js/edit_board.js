@@ -1,29 +1,32 @@
 $(document).ready(function() {
-    $(document).on('click', 'h5.card-title', function() {
+    $(document).on('dblclick', 'h5.card-title', function() {
         let $h5 = $(this);
-        let currentText = $h5.text();
         let boardId = $h5.data('board-id');
+        console.log(boardId);
+        let currentText = $h5.text();
         let $input = $('<input>', {
             type: 'text',
-            class: 'form-control',
+            class: 'card-title',
             value: currentText,
         });
 
         $h5.replaceWith($input);
         $input.focus(); 
 
-        function updateBoardTitle() {
-            let newText = $input.val(); 
+        function updateTask() {
+            let newText = $input.val();
+            if (newText === '') {
+                newText = 'Board';
+            }
             let $newH5 = $('<h5>', {
-                class: 'card-title',
+                class: 'card-title w-50',
                 text: newText,
-                'data-board-id': boardId 
+                'data-board-id': boardId  
             });
 
-            $input.replaceWith($newH5);
-
+            $input.replaceWith($newH5);  
             $.ajax({
-                url: '/edit-board', 
+                url: '/edit-board',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -31,22 +34,22 @@ $(document).ready(function() {
                     new_title: newText
                 }),
                 success: function(response) {
-                    console.log('Название доски обновлено');
+                    console.log('Задача обновлена');
                 },
                 error: function(error) {
-                    console.log('Ошибка при обновлении названия доски');
+                    console.log('Ошибка при обновлении задачи');
                 }
             });
         }
 
         $input.on('keydown', function(e) {
             if (e.key === 'Enter') {
-                updateBoardTitle();  
+                updateTask(); 
             }
         });
 
         $input.on('blur', function() {
-            updateBoardTitle(); 
+            updateTask(); 
         });
     });
 });

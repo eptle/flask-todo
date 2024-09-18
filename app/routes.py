@@ -2,8 +2,8 @@ from flask import redirect, render_template, flash, url_for, \
     request, jsonify
 from app import app, db, login
 from app.forms import RegistationForm, LoginForm, \
-    AddBoardForm, DeleteBoardForm, EditBoardForm, OpenBoardForm, \
-    AddTaskForm, DeleteTaskForm, EditTaskForm
+    AddBoardForm, DeleteBoardForm, OpenBoardForm, \
+    AddTaskForm, DeleteTaskForm
 from flask_login import current_user, login_user, logout_user, \
     login_required
 import sqlalchemy as sa
@@ -26,9 +26,6 @@ def login():
             sa.select(User).where(User.username == form.username.data))
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
-            print()
-            print('INVALID')
-            print()
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         return redirect(url_for('index'))
@@ -67,7 +64,6 @@ def boards(username):
 
     open_board_form = OpenBoardForm()
     delete_board_form = DeleteBoardForm()
-    edit_board_form = EditBoardForm()
 
     add_board_form = AddBoardForm()
     if add_board_form.validate_on_submit():
@@ -88,7 +84,6 @@ def boards(username):
         boards=board_dicts,
         open_board_form=open_board_form,
         delete_board_form=delete_board_form,
-        edit_board_form=edit_board_form,
         title='Boards'
     )
 
@@ -103,6 +98,25 @@ def delete_board(board_id):
 
     return redirect(url_for('boards', username=current_user.username))
 
+
+@app.route('/edit-board', methods=['GET', 'POST'])
+@login_required
+def edit_board():
+    new_board_name = request.json
+    
+    try:
+        board = db.session.query(Boards).get(new_board_name['board_id'])
+        print('awdaddawdawdawd')
+        if board:
+            board.title = new_board_name['new_title']
+        db.session.commit()
+        return jsonify({'status': 'success'})
+
+    except Exception as e:
+        db.session.rollback()
+        print(f'Error {e}')
+        return jsonify({'status': 'error'}), 500
+    
 
 @app.route('/<username>/boards/<board_id>/<board_title>', methods=['POST', 'GET'])
 @login_required
