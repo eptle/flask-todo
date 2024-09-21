@@ -7,7 +7,7 @@ from app.forms import RegistationForm, LoginForm, \
 from flask_login import current_user, login_user, logout_user, \
     login_required
 import sqlalchemy as sa
-from app.models import User, Boards, Tasks
+from app.models import User, Board, Task
 
 
 @app.route('/')
@@ -67,13 +67,13 @@ def boards(username):
 
     add_board_form = AddBoardForm()
     if add_board_form.validate_on_submit():
-        new_board = Boards(title=add_board_form.title.data,
-                           user_id=current_user.id, position=Boards.get_position(current_user))
+        new_board = Board(title=add_board_form.title.data,
+                           user_id=current_user.id, position=Board.get_position(current_user))
         db.session.add(new_board)
         db.session.commit()
         return redirect(url_for('boards', username=current_user.username))
 
-    query = sa.select(Boards).where(Boards.user_id == current_user.id)
+    query = sa.select(Board).where(Board.user_id == current_user.id)
     user_boards = db.session.scalars(query).all()
     board_dicts = [b.to_dict() for b in user_boards]
     is_board = True  # переменная для тега <title>
@@ -91,7 +91,7 @@ def boards(username):
 @app.route('/delete-board/<board_id>', methods=['POST', 'GET'])
 @login_required
 def delete_board(board_id):
-    board = db.session.scalar(sa.select(Boards).where(Boards.id == board_id))
+    board = db.session.scalar(sa.select(Board).where(Board.id == board_id))
 
     db.session.delete(board)
     db.session.commit()
@@ -105,7 +105,7 @@ def edit_board():
     new_board_name = request.json
     
     try:
-        board = db.session.query(Boards).get(new_board_name['board_id'])
+        board = db.session.query(Board).get(new_board_name['board_id'])
         print('awdaddawdawdawd')
         if board:
             board.title = new_board_name['new_title']
@@ -127,8 +127,8 @@ def tasks(username, board_id, board_title):
     add_task_form = AddTaskForm()
     delete_task_form = DeleteTaskForm()
     if add_task_form.validate_on_submit():
-        new_task = Tasks(board_id=board_id, title=add_task_form.title.data,
-                         position=Tasks.get_position(board_id))
+        new_task = Task(board_id=board_id, title=add_task_form.title.data,
+                         position=Task.get_position(board_id))
         try:
             db.session.add(new_task)
             db.session.commit()
@@ -142,7 +142,7 @@ def tasks(username, board_id, board_title):
             board_title=board_title
         ))
 
-    query = sa.select(Tasks).where(Tasks.board_id == board_id)
+    query = sa.select(Task).where(Task.board_id == board_id)
     tasks = db.session.scalars(query).all()
     tasks_dicts = [t.to_dict() for t in tasks]
     tasks_dicts.sort(key=lambda x: x['position'])
@@ -162,8 +162,8 @@ def tasks(username, board_id, board_title):
 @app.route('/delete-task/<task_id>', methods=['POST', 'GET'])
 @login_required
 def delete_task(task_id):
-    task = db.session.scalar(sa.select(Tasks).where(Tasks.id == task_id))
-    query = db.session.query(Tasks).filter_by(id=task_id).first()
+    task = db.session.scalar(sa.select(Task).where(Task.id == task_id))
+    query = db.session.query(Task).filter_by(id=task_id).first()
     board_id = query.board_id
     board_title = query.board.title
 
@@ -180,7 +180,7 @@ def update_task_order():
 
     try:
         for task_data in task_order:
-            task = db.session.query(Tasks).get(task_data['id'])
+            task = db.session.query(Task).get(task_data['id'])
             if task:
                 task.position = task_data['position']
         db.session.commit()
@@ -198,7 +198,7 @@ def edit_task():
     new_task_name = request.json
     
     try:
-        task = db.session.query(Tasks).get(new_task_name['task_id'])
+        task = db.session.query(Task).get(new_task_name['task_id'])
         if task:
             task.title = new_task_name['new_title']
         db.session.commit()

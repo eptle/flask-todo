@@ -28,7 +28,7 @@ html,
 body {
   height: 100%;
   /*background-color: #333;*/
-  background-color: #183531;
+  background-color: #24534d;
 }
 
 body {
@@ -163,4 +163,9 @@ h5.card-title:hover {
 
 .add-task-form {
   margin: 5px 0 15px 0;
+}
+
+.sort-task {
+  word-break: break-word;
+  white-space: normal;
 }

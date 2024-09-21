@@ -1,22 +1,24 @@
 {% extends 'base_intro.html' %}
 
 {% block content %}
-<div class="container-fluid mt-5">
+<div class="container my-3 form-container">
     <h1>{{ username }} — {{ board_title }}</h1>
-    <div class="d-flex add-task-form">
+    <div class="d-flex add-task-form col-md-10">
         <form method="post" action="">
             {{ add_task_form.hidden_tag() }}
-            <div class="form-group d-flex ">
-                {{ add_task_form.title.label }}
-                {{ add_task_form.title(class="form-control w-45", placeholder="Enter your task here") }}
-                <div class="form-group">
+            <div class="form-group d-flex">
+                <div class="form-group d-flex me-2">
+                    {{ add_task_form.title.label }}
+                    {{ add_task_form.title(class="form-control", placeholder="Enter your task here") }}
+                </div>
+                <div class="form-group d-flex ">
                     {{ add_task_form.submit(class="btn btn-primary") }}
                 </div>
             </div>
         </form>
     </div>
     <div>
-        <ul id="task-list" class="list-group col">
+        <ul id="task-list" class="list-group col-md-10">
             {% for task in tasks %}
                 <li class="list-group-item d-flex justify-content-between align-items-center" data-task-id="{{ task['id'] }}">
                     <div class="sort-task">{{ task['title'] }}</div>

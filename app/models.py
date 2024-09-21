@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
     password_hash: Mapped[Optional[str]] = mapped_column(sa.String(256))
     date_joined: Mapped[datetime] = mapped_column(sa.Date, default=lambda: datetime.now(timezone.utc))
 
-    boards: Mapped[list['Boards']] = relationship('Boards', back_populates='user')
+    board: Mapped[list['Board']] = relationship('Board', back_populates='user')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -28,8 +28,8 @@ class User(db.Model, UserMixin):
         return f'<User {self.username}>'
     
 
-class Boards(db.Model):
-    __tablename__ = 'boards'
+class Board(db.Model):
+    __tablename__ = 'board'
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     user_id: Mapped[int] = mapped_column(sa.ForeignKey('user.id'), index=True)
@@ -37,8 +37,8 @@ class Boards(db.Model):
     date_created: Mapped[datetime] = mapped_column(sa.Date, default=lambda: datetime.now(timezone.utc))
     position: Mapped[int] = mapped_column()
 
-    user: Mapped['User'] = relationship('User', back_populates='boards')
-    tasks: Mapped[list['Tasks']] = relationship('Tasks', 
+    user: Mapped['User'] = relationship('User', back_populates='board')
+    task: Mapped[list['Task']] = relationship('Task', 
                                                 back_populates='board',
                                                 cascade="all, delete-orphan"
                                                 )
@@ -55,23 +55,21 @@ class Boards(db.Model):
     
     @staticmethod
     def get_position(current_user):
-        max_position = db.session.query(sa.func.max(Boards.position)).filter_by(user_id = current_user.id).scalar()
+        max_position = db.session.query(sa.func.max(Board.position)).filter_by(user_id = current_user.id).scalar()
         new_position = 1 if max_position is None else max_position + 1
         return new_position
     
 
-class Tasks(db.Model):
-    __tablename__ = 'tasks'
+class Task(db.Model):
+    __tablename__ = 'task'
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    board_id: Mapped[int] = mapped_column(sa.ForeignKey('boards.id'), index=True)
+    board_id: Mapped[int] = mapped_column(sa.ForeignKey('board.id'), index=True)
     title: Mapped[str] = mapped_column(sa.String(50))
     position: Mapped[int] = mapped_column()
     last_edit: Mapped[datetime] = mapped_column(sa.Date, default=lambda: datetime.now(timezone.utc))
 
-    board: Mapped["Boards"] = relationship("Boards", back_populates="tasks")
-
-    # __table_args__ = (sa.UniqueConstraint('board_id', 'position', name='user_position_uc'),)
+    board: Mapped["Board"] = relationship("Board", back_populates="task")
 
     def to_dict(self):
         return {
@@ -83,7 +81,7 @@ class Tasks(db.Model):
     
     @staticmethod
     def get_position(board_id):
-        max_position = db.session.query(sa.func.max(Tasks.position)).filter_by(board_id = board_id).scalar()
+        max_position = db.session.query(sa.func.max(Task.position)).filter_by(board_id = board_id).scalar()
         new_position = 1 if max_position is None else max_position + 1
         return new_position
     
