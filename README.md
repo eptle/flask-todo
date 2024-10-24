@@ -1,4 +1,4 @@
-# flask-todo
+## Flask-todo
 This is my simple to-do list made in flask with some features like authentication, AJAX and drag-and-drop list sorting.
 
 ## Requirements
