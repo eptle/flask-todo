@@ -32,7 +32,7 @@ This is my simple to-do list made in flask with some features like authenticatio
     ```
     pip install -r requirements.txt
     ```
-3. Initialise database:
+3. Initialize database:
     ```
     flask db init
     flask db migrate -m 'create new database'
