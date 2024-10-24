@@ -68,6 +68,7 @@ class Task(db.Model):
     title: Mapped[str] = mapped_column(sa.String(50))
     position: Mapped[int] = mapped_column()
     last_edit: Mapped[datetime] = mapped_column(sa.Date, default=lambda: datetime.now(timezone.utc))
+    is_done: Mapped[bool] = mapped_column(sa.Boolean, default=False)
 
     board: Mapped["Board"] = relationship("Board", back_populates="task")
 
@@ -76,7 +77,8 @@ class Task(db.Model):
             'id': self.id,
             'board_id': self.board_id,
             'title': self.title,
-            'position': self.position
+            'position': self.position,
+            'is_done': self.is_done
         }
     
     @staticmethod

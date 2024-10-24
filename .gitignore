@@ -1,3 +1,5 @@
 venv
 __pycache__
 jsconfig.json
+app.db
+migrations
