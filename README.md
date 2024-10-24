@@ -30,16 +30,16 @@ This is my simple to-do list made in flask with some features like authenticatio
 1. Clone this repository
 2. Open terminal in the project folder and install the required Python packages using *requirements.txt*:
     ```
-    $ pip install -r requirements.txt
+    pip install -r requirements.txt
     ```
 3. Initialise database:
     ```
-    $ flask db init
-    $ flask db migrate -m 'create new database'
-    $ flask db upgrade
+    flask db init
+    flask db migrate -m 'create new database'
+    flask db upgrade
     ```
 
 3. Run Flask application:
     ```
-    $ flask run
+    flask run
     ```
