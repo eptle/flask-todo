@@ -1,5 +1,5 @@
 venv
 __pycache__
 jsconfig.json
-app.db
+instance/app.db
 migrations
