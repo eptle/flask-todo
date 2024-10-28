@@ -12,7 +12,7 @@ from markupsafe import Markup
 class RegistationForm(FlaskForm):
     username = StringField('Username: ', validators=[DataRequired(), Length(min=3, max=50)])
     email = EmailField('Email: ', validators=[DataRequired()])
-    password = PasswordField('Password: ', validators=[DataRequired(), Length(min=8, max=80)])
+    password = PasswordField('Password: ', validators=[DataRequired(), Length(min=3, max=80)])
     password2 = PasswordField('Repeat password: ', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
 

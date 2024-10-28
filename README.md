@@ -2,6 +2,9 @@
 This is my simple to-do list made in flask with some features like authentication, AJAX and drag-and-drop list sorting.
 
 ## Requirements
+
+### Python
+
 - alembic==1.13.2
 - blinker==1.8.2
 - click==8.1.7
@@ -23,6 +26,15 @@ This is my simple to-do list made in flask with some features like authenticatio
 - typing_extensions==4.12.2
 - Werkzeug==3.0.4
 - WTForms==3.1.2
+
+### JavaSctipt
+
+- SortableJS
+- JQuery 3.7.1
+
+### CSS
+
+- Bootstrap 5
 
 
 ## Installation

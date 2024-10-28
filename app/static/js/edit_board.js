@@ -2,7 +2,6 @@ $(document).ready(function() {
     $(document).on('dblclick', 'h5.card-title', function() {
         let $h5 = $(this);
         let boardId = $h5.data('board-id');
-        console.log(boardId);
         let currentText = $h5.text();
         let $input = $('<input>', {
             type: 'text',

@@ -12,7 +12,6 @@ let sortable = new Sortable(taskList, {
                 position: i + 1
             });
         }
-        console.log(task_order)
 
         fetch('/update-task-order', {
             method: 'POST',
