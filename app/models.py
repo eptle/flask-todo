@@ -1,4 +1,4 @@
-from app import app, db, login
+from app import db, login
 from typing import Optional
 import sqlalchemy as sa
 from sqlalchemy.orm import Mapped, mapped_column, WriteOnlyMapped, relationship, registry

@@ -22,7 +22,7 @@
             {% for task in tasks %}
                 <li class="list-group-item d-flex justify-content-between align-items-center" data-task-id="{{ task['id'] }}">
                     <div class="sort-task">{{ task['title'] }}</div>
-                        <form class="" method="post", action="{{ url_for('delete_task', task_id=task['id']) }}">
+                        <form class="" method="post", action="{{ url_for('tasks.delete_task', task_id=task['id']) }}">
                             {{ delete_task_form.hidden_tag() }}
                             {{ delete_task_form.submit() }}
                         </form>

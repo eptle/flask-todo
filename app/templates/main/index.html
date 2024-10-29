@@ -6,9 +6,9 @@
     <p class="lead">Тут немножко не самого интересного текста, который нужен для того, чтобы вы его читали с очень задумчивым видом.</p>
     <p class="lead">
       {% if current_user.is_anonymous %}
-      <a href="{{ url_for('register') }}" class="btn btn-lg btn-secondary">Зарегистрироваться</a>
+      <a href="{{ url_for('auth.register') }}" class="btn btn-lg btn-secondary">Зарегистрироваться</a>
       {% else %}
-      <a href="{{ url_for('boards', username=current_user.username) }}" class="btn btn-lg btn-secondary">К записям</a>
+      <a href="{{ url_for('boards.boards', username=current_user.username) }}" class="btn btn-lg btn-secondary">К записям</a>
       {% endif %}
     </p>
 </main>

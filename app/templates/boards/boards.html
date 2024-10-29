@@ -27,12 +27,12 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title" data-board-id="{{ board['id'] }}"> {{ board['title'] }} </h5>
-                    <form method="post" action="{{ url_for('tasks', username=current_user.username, board_id=board['id'], board_title=board['title']) }}">
+                    <form method="post" action="{{ url_for('tasks.tasks', username=current_user.username, board_id=board['id'], board_title=board['title']) }}">
                         {{ open_board_form.hidden_tag() }}
                         {{ open_board_form.submit() }}
                     </form>
 
-                    <form method="post" action="{{ url_for('delete_board', board_id=board['id']) }}">
+                    <form method="post" action="{{ url_for('boards.delete_board', board_id=board['id']) }}">
                         {{ delete_board_form.hidden_tag() }}
                         {{ delete_board_form.submit() }}
                     </form>
