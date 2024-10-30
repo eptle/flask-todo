@@ -37,6 +37,7 @@ def register():
             user.set_password(form.password.data)
             db.session.add(user)
             db.session.commit()
+            login_user(user)
             return redirect(url_for('auth.login'))
         except:
             db.session.rollback()

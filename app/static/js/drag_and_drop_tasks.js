@@ -2,6 +2,7 @@ let taskList = document.getElementById('task-list');
 
 let sortable = new Sortable(taskList, {
     animation: 150,
+    handle: '.handle',
     onEnd: function(evt) {
         let task_order = [];
         let tasks = taskList.children;
